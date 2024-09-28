@@ -351,18 +351,18 @@ app.get('/ventas', (req, res) => {
 
 app.get('/students/averages', (req, res) => {
     const students = [
-        { name: "Alumno 1", grades: [5.5, 8.6, 10] },
-        { name: "Alumno 2", grades: [8.0, 5.5, 10] },
-        { name: "Alumno 3", grades: [9.0, 4.1, 7.8] },
-        { name: "Alumno 4", grades: [10, 2.2, 8.1] },
-        { name: "Alumno 5", grades: [7.0, 9.2, 7.1] },
-        { name: "Alumno 6", grades: [9.0, 4.0, 6.0] },
-        { name: "Alumno 7", grades: [6.5, 5.0, 5.0] },
-        { name: "Alumno 8", grades: [4.0, 7.0, 4.0] },
-        { name: "Alumno 9", grades: [8.0, 8.0, 9.0] },
-        { name: "Alumno 10", grades: [10, 9.0, 9.2] },
-        { name: "Alumno 11", grades: [5.0, 10, 8.4] },
-        { name: "Alumno 12", grades: [9.0, 4.6, 7.5] }
+        { name: "Yael Ruiz", grades: [5.5, 8.6, 10] },
+        { name: "Kevin Basto", grades: [8.0, 5.5, 10] },
+        { name: "Josue Uicab", grades: [9.0, 4.1, 7.8] },
+        { name: "Jesus Sosme", grades: [10, 2.2, 8.1] },
+        { name: "Jesus Gamboa", grades: [7.0, 9.2, 7.1] },
+        { name: "Hector Cervantes", grades: [9.0, 4.0, 6.0] },
+        { name: "Joel Canul", grades: [6.5, 5.0, 5.0] },
+        { name: "Abraham Pech", grades: [4.0, 7.0, 4.0] },
+        { name: "Rodrigo Esmorto", grades: [8.0, 8.0, 9.0] },
+        { name: "Angel Ku", grades: [10, 9.0, 9.2] },
+        { name: "Angelica Segura", grades: [5.0, 10, 8.4] },
+        { name: "Miguel torres", grades: [9.0, 4.6, 7.5] }
     ];
 
     let totalStudents = students.length;
