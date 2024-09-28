@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuadrado Mágico</title>
+    <link rel="stylesheet" href="cuadrado.css">
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        td {
+            padding: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="magicSquareForm">
+        <table>
+            <tr>
+                <td><input type="number" id="cell-0-0" required></td>
+                <td><input type="number" id="cell-0-1" required></td>
+                <td><input type="number" id="cell-0-2" required></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cell-1-0" required></td>
+                <td><input type="number" id="cell-1-1" required></td>
+                <td><input type="number" id="cell-1-2" required></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cell-2-0" required></td>
+                <td><input type="number" id="cell-2-1" required></td>
+                <td><input type="number" id="cell-2-2" required></td>
+            </tr>
+        </table>
+        <button type="submit">Verificar Cuadro Mágico</button>
+    </form>
+    <div id="result"></div>
+    <script src="cuadrado.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz Transformada</title>
+    <link rel="stylesheet" href="diagonal.css">
+</head>
+<body>
+    <h1>Generar y Transformar Matriz Cuadrada</h1>
+    <form id="matrixForm">
+        <label for="matrixSize">Tamaño de la Matriz (n):</label>
+        <input type="number" id="matrixSize" name="matrixSize" min="2" required>
+        <button type="submit">Generar Matriz</button>
+    </form>
+
+    <div id="result" class="result-container">
+        <h2>Matriz Original</h2>
+        <pre id="originalMatrix"></pre>
+        <h2>Paso a Paso de la Transformación</h2>
+        <div id="transformationSteps"></div>
+        <h2>Matriz Transformada</h2>
+        <pre id="transformedMatrix"></pre>
+    </div>
+
+    <script src="diagonal.js"></script>
+</body>
+</html>
