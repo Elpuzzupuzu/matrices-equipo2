@@ -7,7 +7,6 @@ body {
     justify-content: center;
     height: 100vh;
     margin: 0;
-    padding: 20px;
 }
 
 h1 {
@@ -16,7 +15,7 @@ h1 {
 
 button {
     padding: 10px 20px;
-    background-color: #ff00dd;
+    background-color: #ff002b;
     color: white;
     border: none;
     cursor: pointer;
@@ -29,12 +28,12 @@ button:hover {
 }
 
 .result-container {
-    background-color: #bed0e1;
+    background-color: #f4f7f9;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 600px;
-    width: 100%;
+    text-align: left;
 }
 
 .output {
@@ -42,6 +41,6 @@ button:hover {
     padding: 15px;
     border-radius: 5px;
     overflow-x: auto;
+    white-space: pre-wrap; /* Para manejar espacios en blanco */
     margin: 10px 0;
-    white-space: pre-wrap; /* Mantiene el formato de espacios y saltos de línea */
 }

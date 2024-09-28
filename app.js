@@ -348,23 +348,8 @@ app.get('/ventas', (req, res) => {
 ///------------promedios-----------------------------------/////
 
 // Datos de los alumnos y sus calificaciones
-const students = [
-    { name: 'Alumno 1', grades: [5.5, 8.6, 10] },
-    { name: 'Alumno 2', grades: [8.0, 5.5, 10] },
-    { name: 'Alumno 3', grades: [9.0, 4.1, 7.8] },
-    { name: 'Alumno 4', grades: [10, 2.2, 8.1] },
-    { name: 'Alumno 5', grades: [7.0, 9.2, 7.1] },
-    { name: 'Alumno 6', grades: [9.0, 4.0, 6.0] },
-    { name: 'Alumno 7', grades: [6.5, 5.0, 5.0] },
-    { name: 'Alumno 8', grades: [4.0, 7.0, 4.0] },
-    { name: 'Alumno 9', grades: [8.0, 8.0, 9.0] },
-    { name: 'Alumno 10', grades: [10, 9.0, 9.2] },
-    { name: 'Alumno 11', grades: [5.0, 10, 8.4] },
-    { name: 'Alumno 12', grades: [9.0, 4.6, 7.5] }
-];
 
 app.get('/students/averages', (req, res) => {
-    // Datos de los alumnos y sus calificaciones
     const students = [
         { name: "Alumno 1", grades: [5.5, 8.6, 10] },
         { name: "Alumno 2", grades: [8.0, 5.5, 10] },
@@ -380,51 +365,55 @@ app.get('/students/averages', (req, res) => {
         { name: "Alumno 12", grades: [9.0, 4.6, 7.5] }
     ];
 
-    // Calcular promedios, mayores y menores promedios, y reprobaron
-    let highestAverage = 0;
-    let lowestAverage = Infinity;
-    let highestStudent = '';
-    let lowestStudent = '';
-    const distribution = { "0-4.9": 0, "5.0-5.9": 0, "6.0-6.9": 0, "7.0-7.9": 0, "8.0-8.9": 0, "9.0-10": 0 };
-    const failedStudents = [];
-
-    const results = students.map(student => {
-        const average = student.grades.reduce((a, b) => a + b, 0) / student.grades.length;
-        
-        // Determinar el alumno con el promedio más alto y más bajo
-        if (average > highestAverage) {
-            highestAverage = average;
-            highestStudent = student.name;
-        }
-        if (average < lowestAverage) {
-            lowestAverage = average;
-            lowestStudent = student.name;
-        }
-        
-        // Clasificación de promedios
-        if (average < 5) distribution["0-4.9"]++;
-        else if (average < 6) distribution["5.0-5.9"]++;
-        else if (average < 7) distribution["6.0-6.9"]++;
-        else if (average < 8) distribution["7.0-7.9"]++;
-        else if (average < 9) distribution["8.0-8.9"]++;
-        else distribution["9.0-10"]++;
-
-        // Reprobados
-        const failed = student.grades.filter(grade => grade < 7);
-        if (failed.length > 0) {
-            failedStudents.push({ name: student.name, failedGrades: failed });
-        }
-
-        return { name: student.name, average: average.toFixed(2) };
+    let totalStudents = students.length;
+    let overallAverages = students.map(student => {
+        const average = (student.grades.reduce((acc, grade) => acc + grade, 0) / student.grades.length).toFixed(2);
+        return { name: student.name, average: parseFloat(average) };
     });
 
-    // Respuesta estructurada
+    let highestAverage = overallAverages.reduce((prev, current) => (prev.average > current.average) ? prev : current);
+    let lowestAverage = overallAverages.reduce((prev, current) => (prev.average < current.average) ? prev : current);
+
+    let failedStudents = students.filter(student => student.grades.some(grade => grade < 7))
+        .map(student => ({
+            name: student.name,
+            failedGrades: student.grades
+                .map((grade, index) => (grade < 7 ? `Parcial ${index + 1}` : null))
+                .filter(Boolean)
+        }));
+
+    // Distribución de promedios
+    let gradeDistribution = {
+        "0-4.9": 0,
+        "5.0-5.9": 0,
+        "6.0-6.9": 0,
+        "7.0-7.9": 0,
+        "8.0-8.9": 0,
+        "9.0-10": 0
+    };
+
+    overallAverages.forEach(({ average }) => {
+        if (average < 5) gradeDistribution["0-4.9"]++;
+        else if (average < 6) gradeDistribution["5.0-5.9"]++;
+        else if (average < 7) gradeDistribution["6.0-6.9"]++;
+        else if (average < 8) gradeDistribution["7.0-7.9"]++;
+        else if (average < 9) gradeDistribution["8.0-8.9"]++;
+        else gradeDistribution["9.0-10"]++;
+    });
+
+    // Crear la tabla de calificaciones
+    const gradesTable = students.map(student => {
+        return `${student.name}: [${student.grades.join(", ")}] - Promedio: ${((student.grades.reduce((acc, grade) => acc + grade, 0) / student.grades.length).toFixed(2))}`;
+    }).join('\n');
+
+    // Enviar respuesta estructurada
     res.json({
-        overallAverages: results,
-        highestAverage: { name: highestStudent, average: highestAverage.toFixed(2) },
-        lowestAverage: { name: lowestStudent, average: lowestAverage.toFixed(2) },
-        failedStudents: failedStudents,
-        gradeDistribution: distribution
+        overallAverages,
+        highestAverage,
+        lowestAverage,
+        failedStudents,
+        gradeDistribution,
+        gradesTable
     });
 });
 
