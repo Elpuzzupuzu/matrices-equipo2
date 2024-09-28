@@ -247,6 +247,186 @@ app.post('/matrix/sum-average', (req, res) => {
 });
 
 
+///-----ventas ------////
+
+// Definición de la matriz
+const ventas = [
+    [5, 16, 10, 12, 24],
+    [40, 55, 10, 11, 18],
+    [15, 41, 78, 14, 51],
+    [35, 22, 81, 15, 12],
+    [50, 12, 71, 10, 20],
+    [70, 40, 60, 28, 22],
+    [50, 50, 50, 36, 25],
+    [40, 70, 40, 11, 20],
+    [20, 20, 30, 12, 18],
+    [10, 40, 32, 13, 16],
+    [50, 3, 24, 15, 82],
+    [40, 46, 15, 46, 22]
+];
+
+
+
+// Endpoint para mostrar las ventas
+app.get('/ventas', (req, res) => {
+    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    const meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 
+        'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 
+        'Noviembre', 'Diciembre'
+    ];
+    
+    let menorVenta = Number.MAX_VALUE;
+    let mayorVenta = Number.MIN_VALUE;
+    let totalVentas = 0;
+
+    // Almacenar las posiciones de las menores y mayores ventas
+    const menoresPosiciones = [];
+    const mayoresPosiciones = [];
+
+    // Iterar sobre la matriz para calcular las ventas
+    for (let mes = 0; mes < ventas.length; mes++) {
+        for (let dia = 0; dia < ventas[mes].length; dia++) {
+            const venta = ventas[mes][dia];
+            totalVentas += venta;
+
+            // Comprobar menor venta
+            if (venta < menorVenta) {
+                menorVenta = venta;
+                menoresPosiciones.length = 0; // Limpiar posiciones anteriores
+                menoresPosiciones.push({ dia: dias[dia], mes: meses[mes], venta });
+            } else if (venta === menorVenta) {
+                menoresPosiciones.push({ dia: dias[dia], mes: meses[mes], venta });
+            }
+
+            // Comprobar mayor venta
+            if (venta > mayorVenta) {
+                mayorVenta = venta;
+                mayoresPosiciones.length = 0; // Limpiar posiciones anteriores
+                mayoresPosiciones.push({ dia: dias[dia], mes: meses[mes], venta });
+            } else if (venta === mayorVenta) {
+                mayoresPosiciones.push({ dia: dias[dia], mes: meses[mes], venta });
+            }
+        }
+    }
+
+    // Formatear la salida
+    const resultado = {
+        menorVenta: {
+            valor: menorVenta,
+            posiciones: menoresPosiciones
+        },
+        mayorVenta: {
+            valor: mayorVenta,
+            posiciones: mayoresPosiciones
+        },
+        totalVentas,
+        detallesVentas: []
+    };
+
+    // Detallar las ventas por día y mes
+    for (let mes = 0; mes < ventas.length; mes++) {
+        for (let dia = 0; dia < ventas[mes].length; dia++) {
+            resultado.detallesVentas.push({
+                dia: dias[dia],
+                mes: meses[mes],
+                venta: ventas[mes][dia]
+            });
+        }
+    }
+
+    // Enviar respuesta JSON
+    res.json(resultado);
+});
+
+
+
+
+
+
+
+///------------promedios-----------------------------------/////
+
+// Datos de los alumnos y sus calificaciones
+const students = [
+    { name: 'Alumno 1', grades: [5.5, 8.6, 10] },
+    { name: 'Alumno 2', grades: [8.0, 5.5, 10] },
+    { name: 'Alumno 3', grades: [9.0, 4.1, 7.8] },
+    { name: 'Alumno 4', grades: [10, 2.2, 8.1] },
+    { name: 'Alumno 5', grades: [7.0, 9.2, 7.1] },
+    { name: 'Alumno 6', grades: [9.0, 4.0, 6.0] },
+    { name: 'Alumno 7', grades: [6.5, 5.0, 5.0] },
+    { name: 'Alumno 8', grades: [4.0, 7.0, 4.0] },
+    { name: 'Alumno 9', grades: [8.0, 8.0, 9.0] },
+    { name: 'Alumno 10', grades: [10, 9.0, 9.2] },
+    { name: 'Alumno 11', grades: [5.0, 10, 8.4] },
+    { name: 'Alumno 12', grades: [9.0, 4.6, 7.5] }
+];
+
+app.get('/students/averages', (req, res) => {
+    // Datos de los alumnos y sus calificaciones
+    const students = [
+        { name: "Alumno 1", grades: [5.5, 8.6, 10] },
+        { name: "Alumno 2", grades: [8.0, 5.5, 10] },
+        { name: "Alumno 3", grades: [9.0, 4.1, 7.8] },
+        { name: "Alumno 4", grades: [10, 2.2, 8.1] },
+        { name: "Alumno 5", grades: [7.0, 9.2, 7.1] },
+        { name: "Alumno 6", grades: [9.0, 4.0, 6.0] },
+        { name: "Alumno 7", grades: [6.5, 5.0, 5.0] },
+        { name: "Alumno 8", grades: [4.0, 7.0, 4.0] },
+        { name: "Alumno 9", grades: [8.0, 8.0, 9.0] },
+        { name: "Alumno 10", grades: [10, 9.0, 9.2] },
+        { name: "Alumno 11", grades: [5.0, 10, 8.4] },
+        { name: "Alumno 12", grades: [9.0, 4.6, 7.5] }
+    ];
+
+    // Calcular promedios, mayores y menores promedios, y reprobaron
+    let highestAverage = 0;
+    let lowestAverage = Infinity;
+    let highestStudent = '';
+    let lowestStudent = '';
+    const distribution = { "0-4.9": 0, "5.0-5.9": 0, "6.0-6.9": 0, "7.0-7.9": 0, "8.0-8.9": 0, "9.0-10": 0 };
+    const failedStudents = [];
+
+    const results = students.map(student => {
+        const average = student.grades.reduce((a, b) => a + b, 0) / student.grades.length;
+        
+        // Determinar el alumno con el promedio más alto y más bajo
+        if (average > highestAverage) {
+            highestAverage = average;
+            highestStudent = student.name;
+        }
+        if (average < lowestAverage) {
+            lowestAverage = average;
+            lowestStudent = student.name;
+        }
+        
+        // Clasificación de promedios
+        if (average < 5) distribution["0-4.9"]++;
+        else if (average < 6) distribution["5.0-5.9"]++;
+        else if (average < 7) distribution["6.0-6.9"]++;
+        else if (average < 8) distribution["7.0-7.9"]++;
+        else if (average < 9) distribution["8.0-8.9"]++;
+        else distribution["9.0-10"]++;
+
+        // Reprobados
+        const failed = student.grades.filter(grade => grade < 7);
+        if (failed.length > 0) {
+            failedStudents.push({ name: student.name, failedGrades: failed });
+        }
+
+        return { name: student.name, average: average.toFixed(2) };
+    });
+
+    // Respuesta estructurada
+    res.json({
+        overallAverages: results,
+        highestAverage: { name: highestStudent, average: highestAverage.toFixed(2) },
+        lowestAverage: { name: lowestStudent, average: lowestAverage.toFixed(2) },
+        failedStudents: failedStudents,
+        gradeDistribution: distribution
+    });
+});
 
 
 
@@ -256,13 +436,7 @@ app.post('/matrix/sum-average', (req, res) => {
 
 
 
-///-----------------------------------------------/////
-
-
-
-
-
-
+//-----------------------------------------------////
 
 
 
